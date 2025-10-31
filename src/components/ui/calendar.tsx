@@ -37,14 +37,13 @@ const Calendar_Options: React.FC<CalendarOptionsProps> = ({
   showTime = false,
   onChange,
 }) => {
-  const defaultValue =
+  const placeholderText =
     pickerType === "date"
-      ? dayjs()
+      ? "วันที่เปิดบัญชีเงินกู้"
       : pickerType === "month"
-      ? dayjs().month(0)
-      : dayjs();
+      ? "วันที่เปิดบัญชีเงินกู้เฉพาะเดือน"
+      : "เลือกวันที่เปิดบัญชีเงินกู้เฉพาะปี";
 
-  // 🔒 ปิดย้อนหลังทั้งหมด (ก่อนวันนี้)
   const disabledDate = (current: Dayjs) => {
     if (!current) return false;
 
@@ -53,7 +52,10 @@ const Calendar_Options: React.FC<CalendarOptionsProps> = ({
     switch (pickerType) {
       case "month":
         // ปิดเดือนก่อนเดือนปัจจุบัน (รวมปีที่น้อยกว่า)
-        return current.year() < now.year() || (current.year() === now.year() && current.month() < now.month());
+        return (
+          current.year() < now.year() ||
+          (current.year() === now.year() && current.month() < now.month())
+        );
       case "year":
         // ปิดปีที่น้อยกว่าปีปัจจุบัน
         return current.year() < now.year();
@@ -77,11 +79,12 @@ const Calendar_Options: React.FC<CalendarOptionsProps> = ({
       >
         <div className="relative w-full flex items-center">
           <DatePicker
-            defaultValue={defaultValue}
+            placeholder={placeholderText}
+            defaultValue={null}
             picker={pickerType === "date" ? undefined : pickerType}
             showTime={pickerType === "date" ? showTime : false}
             onChange={onChange}
-            disabledDate={disabledDate} // ✅ ใช้งานตรงนี้
+            disabledDate={disabledDate}
             className="w-full h-10 text-base !text-gray-700 placeholder:!text-gray-400 !rounded-lg !border-2 !border-gray-300"
             suffixIcon={null}
             locale={locale}
