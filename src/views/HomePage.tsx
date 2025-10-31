@@ -1,5 +1,6 @@
 import React from "react";
 import Calendar_Options from "../components/ui/calendar";
+import PieChartExample from "../components/ui/piechart";
 
 const HomePage: React.FC = () => {
   return (
@@ -20,6 +21,8 @@ const HomePage: React.FC = () => {
       <div className="w-1/2 h-12 ml-80">
         <Calendar_Options pickerType="year" />
       </div>
+
+      <PieChartExample/>
     </div>
   );
 };
