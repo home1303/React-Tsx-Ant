@@ -4,28 +4,26 @@ import React from "react";
 import { ConfigProvider, DatePicker, Space } from "antd";
 import th from "antd/es/date-picker/locale/th_TH";
 import thTH from "antd/es/locale/th_TH";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/th";
 import locale from "antd/es/date-picker/locale/th_TH";
-
 import { CalendarOutlined } from "@ant-design/icons";
-
 import type { CalendarOptionsProps } from "../../services/models/Calendar";
 
 dayjs.locale("th");
-// Component level locale
+
+// Locale Buddhist
 const buddhistLocale: typeof th = {
   ...th,
   lang: {
     ...th.lang,
     fieldDateFormat: "YYYY/MM/DD",
-    fieldDateTimeFormat: "YYYY/MM/DD",
+    fieldDateTimeFormat: "YYYY/MM/DD HH:mm:ss",
     yearFormat: "YYYY",
     cellYearFormat: "YYYY",
   },
 };
 
-// ConfigProvider level locale
 const globalBuddhistLocale: typeof thTH = {
   ...thTH,
   DatePicker: {
@@ -34,20 +32,36 @@ const globalBuddhistLocale: typeof thTH = {
   },
 };
 
-
 const Calendar_Options: React.FC<CalendarOptionsProps> = ({
-  pickerType = "date", // ตรงนี้คือค่า "date" / "month" / "year"
+  pickerType = "date",
   showTime = false,
   onChange,
 }) => {
-
   const defaultValue =
     pickerType === "date"
-      ? dayjs().year(2568) // วันปัจจุบัน
+      ? dayjs()
       : pickerType === "month"
-      ? dayjs().month(0).year(2568)
-      : dayjs().year(2568); 
+      ? dayjs().month(0)
+      : dayjs();
 
+  // 🔒 ปิดย้อนหลังทั้งหมด (ก่อนวันนี้)
+  const disabledDate = (current: Dayjs) => {
+    if (!current) return false;
+
+    const now = dayjs();
+
+    switch (pickerType) {
+      case "month":
+        // ปิดเดือนก่อนเดือนปัจจุบัน (รวมปีที่น้อยกว่า)
+        return current.year() < now.year() || (current.year() === now.year() && current.month() < now.month());
+      case "year":
+        // ปิดปีที่น้อยกว่าปีปัจจุบัน
+        return current.year() < now.year();
+      default:
+        // ปิดวันก่อนวันนี้
+        return current < now.startOf("day");
+    }
+  };
 
   return (
     <Space direction="vertical" className="w-full">
@@ -62,12 +76,12 @@ const Calendar_Options: React.FC<CalendarOptionsProps> = ({
         }}
       >
         <div className="relative w-full flex items-center">
-          {/* DatePicker input */}
           <DatePicker
             defaultValue={defaultValue}
             picker={pickerType === "date" ? undefined : pickerType}
             showTime={pickerType === "date" ? showTime : false}
             onChange={onChange}
+            disabledDate={disabledDate} // ✅ ใช้งานตรงนี้
             className="w-full h-10 text-base !text-gray-700 placeholder:!text-gray-400 !rounded-lg !border-2 !border-gray-300"
             suffixIcon={null}
             locale={locale}
@@ -80,7 +94,6 @@ const Calendar_Options: React.FC<CalendarOptionsProps> = ({
             }
           />
 
-          {/* Icon แยก */}
           <div className="absolute right-0 h-full w-10 flex items-center justify-center bg-[#009640] text-white rounded-r-lg">
             <CalendarOutlined />
           </div>
