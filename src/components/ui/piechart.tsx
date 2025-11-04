@@ -1,49 +1,72 @@
-"use client";
+import { Pie } from "@ant-design/plots";
+import type { PieConfig } from "@ant-design/plots/es/components/pie";
+import { chartColors } from "../../components/chartColors";
 
-import React from "react";
-import { Pie } from "@ant-design/charts";
+type StatusType =
+  | "รอตรวจสอบ"
+  | "ผ่านการอนุมัติ"
+  | "ไม่ผ่านการอนุมัติ"
+  | "ยกเลิก"
+  | "ปิดงาน";
 
-const PieChartExample: React.FC = () => {
-  const data = [
-    { type: "ออกกำลังกาย", value: 27 },
-    { type: "พักผ่อน", value: 25 },
-    { type: "ทานอาหาร", value: 18 },
-    { type: "ทำงาน", value: 15 },
-    { type: "อื่นๆ", value: 60 },
+type DataItem = { type: StatusType; value: number };
+
+export default function PieWithTheme() {
+  const data: DataItem[] = [
+    { type: "รอตรวจสอบ", value: 1200 },
+    { type: "ผ่านการอนุมัติ", value: 6500 },
+    { type: "ไม่ผ่านการอนุมัติ", value: 1500 },
+    { type: "ยกเลิก", value: 700 },
+    { type: "ปิดงาน", value: 900 },
   ];
 
-  const config = {
+  const colorMap: Record<StatusType, string> = {
+    รอตรวจสอบ: chartColors.waiting,
+    ผ่านการอนุมัติ: chartColors.approved,
+    ไม่ผ่านการอนุมัติ: chartColors.rejected,
+    ยกเลิก: chartColors.cancelled,
+    ปิดงาน: chartColors.closed,
+  };
+
+  const domain: StatusType[] = data.map((d) => d.type);
+  const range: string[] = domain.map((d) => colorMap[d]);
+
+  const config: PieConfig = {
     data,
     angleField: "value",
     colorField: "type",
     radius: 1,
+    innerRadius: 0,
+    color: range,
+    scale: {
+      color: {
+        domain,
+        range,
+      },
+    },
     label: {
       type: "inner",
       offset: "-30%",
-      content: ({ percent }: any) => `${(percent * 100).toFixed(0)}%`,
+      content: "{value}",
       style: {
-        fontSize: 14,
         textAlign: "center",
+        fontSize: 14,
+        fill: "#fff",
       },
     },
-    interactions: [
-      { type: "element-active" },
-      { type: "element-selected" },
-      { type: "legend-highlight" },
-    ],
     legend: {
       position: "bottom",
     },
+    interactions: [{ type: "element-active" }],
   };
 
   return (
-    <div className="w-[400px] mx-auto mt-10">
-      <h2 className="text-center text-lg font-semibold mb-4">
-        สัดส่วนกิจกรรมประจำวัน
-      </h2>
-      <Pie {...config} />
-    </div>
-  );
-};
 
-export default PieChartExample;
+
+<div className="w-full flex flex-col items-center">
+  <Pie {...config} />
+</div>
+
+
+  );
+}
