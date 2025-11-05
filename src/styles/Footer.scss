@@ -1,0 +1,71 @@
+.btn-icon:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-text {
+  color: white;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+button.btn-icon {
+  appearance: none;
+  box-shadow: none;
+  background-clip: padding-box;
+}
+
+.social-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 1px;
+}
+
+footer {
+  background-color: #047857;
+  width: 100%;
+  height: auto;
+
+  .container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .Right-text{
+      font-size: 24px;
+    }
+  }
+
+  .footer-contact {
+    margin-right: 150px;
+    .head-footer {
+      font-size: 16px;
+      letter-spacing: 0.25px;
+    }
+    .sub-footer {
+      font-size: 12px;
+      letter-spacing: 0.25px;
+      white-space: nowrap;
+    }
+    .sub-footer-2 {
+      font-size: 12px;
+      letter-spacing: 0.25px;
+      white-space: nowrap;
+      padding-left: 80px;
+    }
+  }
+}
+
+.footer-online {
+  margin-top: 27px;
+
+  .text {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12.3px;
+    line-height: 18px;
+    letter-spacing: 0.25px;
+    vertical-align: middle;
+  }
+}

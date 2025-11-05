@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import AllRouter from "./controllers/AllRouter";
+import Sidebar from "./components/layout/Sidebars";
+import Footer from "./components/layout/Footer";
 
 const App: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="fixed top-0 left-0 right-0 z-50">
-      </header>
+    <div>
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
-      <main className="flex-1 mt-[24px]">
+      <div className={`main-content ${sidebarOpen ? "sidebar-open" : ""}`}>
         <AllRouter />
-      </main>
+        <Footer />
+      </div>
+      
     </div>
   );
 };
